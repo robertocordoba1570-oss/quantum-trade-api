@@ -1,0 +1,7 @@
+.vs/
+*.sln
+*.vsidx
+*.user
+*.log
+node_modules/
+.env
