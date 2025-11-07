@@ -4,17 +4,18 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
+app.use(express.json()); // ← importante para leer JSON
 
 const API_KEY = 'a66be6abf67448a6ba4d6bbc2c8ba017';
 
-// Funci�n gen�rica para consultar precios
+// Función para consultar precios
 async function obtenerPrecio(symbol) {
   const url = `https://api.twelvedata.com/quote?symbol=${symbol}&apikey=${API_KEY}`;
   const response = await axios.get(url);
   return response.data.close;
 }
 
-// Endpoints institucionales
+// Endpoints GET para precios
 const activos = {
   xauusd: 'XAU/USD',
   plata: 'XAG/USD',
@@ -45,8 +46,17 @@ for (const [ruta, simbolo] of Object.entries(activos)) {
   });
 }
 
+// Endpoint POST para recibir operaciones
+app.post('/api/operar-xauusd', (req, res) => {
+  const { ticket, precio, fecha } = req.body;
+  console.log("🟡 Operación recibida:", ticket, precio, fecha);
+  res.json({ mensaje: "Orden institucional recibida correctamente" });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor activo en puerto ${PORT}`);
+  console.log(`✅ Servidor activo en puerto ${PORT}`);
 });
+
+
 
